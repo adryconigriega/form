@@ -2,6 +2,7 @@
   "name": "form",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://adryconigriega.github.io/form/",
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
@@ -12,6 +13,7 @@
     "core-js": "^3.6.4",
     "express": "^4.17.1",
     "express-validator": "^6.4.0",
+    "gh-pages": "^2.2.0",
     "little-state-machine": "^2.13.0",
     "react": "^16.13.0",
     "react-bootstrap": "^1.0.0",

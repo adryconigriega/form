@@ -22,11 +22,46 @@ function InfoForm (props) {
   var [errorReponseServer, setErrorReponseServer] = useState([{value:"", msg: "", param:"", location:""}]) // Tableau d'erreurs retourné par le serveur
 
   // Définition d'un groupe de checkboxs 
-  const [checkboxs ] = useState([
-    {inputName: "cbox1", labelName:"Choix 1"},
-    {inputName: "cbox2", labelName:"Choix 2"},
-    {inputName: "cbox3", labelName:"Choix 3"},
-  ])
+ 
+  const checkboxs = {
+    langues: [
+      {inputName: "cbox1", labelName:"Français"},
+      {inputName: "cbox2", labelName:"Allemand"},
+      {inputName: "cbox3", labelName:"Anglais"},
+    ], 
+    services: [
+      {inputName: "cbox1", labelName:"Français"},
+      {inputName: "cbox2", labelName:"Allemand"},
+      {inputName: "cbox3", labelName:"Anglais"},
+    ]
+  }; 
+
+  const [blocCheckBox] = useState(checkboxs)
+ 
+  console.log(blocCheckBox)
+  
+  
+  //Methode de test 
+
+  // const getBlocCheckBox = (gcbxName, checkboxs) => {
+  //     const gcbx = '{ "langues" : [' +
+  //     '{ "inputName":"John" , "labelName":"Doe" },' +
+  //     '{ "inputName":"Anna" , "labelName":"Smith" },' +
+  //     '{ "inputName":"Peter" , "labelName":"Jones" } ]}';
+
+  //     return (
+  //       gcbx
+  //     )
+  // }
+
+  // var text = '{ "at" : [' +
+  // '{ "inputName":"John" , "labelName":"Doe" },' +
+  // '{ "inputName":"Anna" , "labelName":"Smith" },' +
+  // '{ "inputName":"Peter" , "labelName":"Jones" } ]}';
+
+  // var obj = JSON.parse(text)
+
+
 
   //METHODES 
 
@@ -38,10 +73,12 @@ function InfoForm (props) {
 
   if (ValidationCheckBoxs(checkboxs, datajson)) {
       console.log('validé')
+      //Envoie de données
       axios.post('http://localhost:4000/', data)
+        //Récuperation de la réponse
         .then( reponse => {
-          console.log(reponse.data.errors)
-          setDataSubmitted(reponse)
+          console.log(reponse.data.errors) 
+          setDataSubmitted(reponse) 
           setErrorReponseServer(reponse.data.errors)
           setFormOk(true)
         })
@@ -54,17 +91,19 @@ function InfoForm (props) {
       console.log('non validé')
       setErrorMessageCheckBox(<span>Veuillez cocher au moins une case</span>)
     }
-       
+    
   }
   
-  //Validation des checkboxs 
+  //Validation des checkboxs coté client
 
-  const ValidationCheckBoxs = (checkboxs, datasend) => {
+  const ValidationCheckBoxs = (checkboxs, datasent) => {
 
     var validation = false 
 
-    datasend.forEach(itemsend => {
+    datasent.forEach(itemsend => {
+      //Obtention des checkbox selon le prefixe 'cbox' 
       if (itemsend.key.includes('cbox')) {
+        //Validation que des checkbox
         checkboxs.forEach(itembox => {
           if (itemsend.key === itembox.inputName) {
               if (itemsend.value) {
@@ -92,7 +131,9 @@ function InfoForm (props) {
 
                                 Nous allons prendre prochainement contact avec vous. <br></br>
                          
+                            <p> 
 
+                            </p>
                             </p>
                             </Alert> 
                             </div>
@@ -103,9 +144,9 @@ function InfoForm (props) {
                               <hr />
                               <p className="mb-0">
                                   Votre demande d'information contient les erreurs suivantes: <br></br>
-                          {/*     <ListGroup>
-                                <ListGroup.item>{errorReponseServer[0].msg}</ListGroup.item>
-                              </ListGroup> */}
+                              {errorReponseServer.map(item => (
+                                <p>{item.msg}</p>
+                              ))}
 
                               </p>
                               </Alert>
@@ -129,19 +170,23 @@ function InfoForm (props) {
                               <InputForm error={methods.errors.lastname} inputName="lastname" labelName="Nom" ></InputForm> 
                               <InputForm error={methods.errors.name} inputName="name" labelName="Prénom"> </InputForm> 
 
-                              <label>Group CheckBox</label>
+                              <label>Choisissez une langue</label>
 
-                                
-                              <InputForm type="checkbox" inputName="fonction" labelName="Fonction" ></InputForm>
-                              <InputForm type="checkbox" inputName="fonction2" labelName="Fonction2" ></InputForm> 
+                            
 
+                            
                               
-                              {checkboxs.map((item) => (
-                                <InputForm type="checkbox" inputName={item.inputName} labelName={item.labelName} ></InputForm>
+
+                              {blocCheckBox.langues.map((item) => (
+                               
+                                  <InputForm type="checkbox" inputName={item.inputName} labelName={item.labelName} ></InputForm>
+                        
                               ))}
                               {errorMessageCheckBox}
 
-                              <InputForm error={methods.errors.fonction}  inputName="fonction" labelName="Fonction" ></InputForm> 
+                              
+
+                              {/* <InputForm error={methods.errors.fonction}  inputName="fonction" labelName="Fonction" ></InputForm> 
                               <InputForm error={methods.errors.company} inputName="company" labelName="Entreprise" ></InputForm> 
                               <InputForm error={methods.errors.departement} inputName="departement" labelName="Département" ></InputForm> 
                               <InputForm error={methods.errors.adress} inputName="adress" labelName="Adresse" ></InputForm> 
@@ -149,7 +194,7 @@ function InfoForm (props) {
                               <InputForm error={methods.errors.npa} type="number" inputName="npa" labelName="NPA" ></InputForm> 
                               <InputForm error={methods.errors.pays} inputName="pays" labelName="Pays" ></InputForm>
                               <InputForm error={methods.errors.tel} inputName="tel" labelName="Téléphone" ></InputForm>
-                              <InputForm error={methods.errors.comments} inputName="comments" labelName="Commentaires" ></InputForm> 
+                              <InputForm error={methods.errors.comments} inputName="comments" labelName="Commentaires" ></InputForm>  */}
                                
                             <button type="submit">Envoyer</button>
                           </form>
@@ -158,7 +203,11 @@ function InfoForm (props) {
 
       if (formOk) {
         return (
-          MessageValidation
+          <div>
+            {MessageValidation}
+            {MessagesErrorServer}
+          </div>
+          
         )
       }
       else {

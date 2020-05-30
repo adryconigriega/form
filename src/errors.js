@@ -1,8 +1,7 @@
+// Composant pour afficher l'ensemble d'erreurs selon le type défini dans les props
 import React  from 'react';
 
 function Errors(props) {
-
-
 
     return (
 
